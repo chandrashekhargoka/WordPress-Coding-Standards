@@ -7,7 +7,7 @@
 	<rule ref="WordPress-Extra"/>
     <rule ref="WordPress.NamingConventions.ValidVariableName">
         <properties>
-            <property name="customVariablesWhitelist" value="searchInformation,cacheId,htmlTitle,htmlFormattedUrl,htmlSnippet,placesLived,aboutMe,iso2Code,capitalCity" type="array" />
+            <property name="customPropertiesWhitelist" value="searchInformation,cacheId,htmlTitle,htmlFormattedUrl,htmlSnippet,placesLived,aboutMe,iso2Code,capitalCity" type="array" />
         </properties>
     </rule>
 </ruleset>
