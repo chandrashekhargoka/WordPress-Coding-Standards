@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <ruleset name="TechInAsia">
 	<description>Tech in Asia WordPress Coding Standards</description>
-
-	<rule ref="WordPress-Core"/>
+	<rule ref="WordPress-Core">
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+	</rule>
 	<rule ref="WordPress-Docs"/>
 	<rule ref="WordPress-Extra"/>
-    <rule ref="WordPress.NamingConventions.ValidVariableName">
-        <properties>
-            <property name="customPropertiesWhitelist" value="searchInformation,cacheId,htmlTitle,htmlFormattedUrl,htmlSnippet,placesLived,aboutMe,iso2Code,capitalCity" type="array" />
-        </properties>
-    </rule>
+	<rule ref="WordPress.NamingConventions.ValidVariableName">
+		<properties>
+			<property name="customPropertiesWhitelist" type="array" value="searchInformation,cacheId,htmlTitle,htmlFormattedUrl,htmlSnippet,placesLived,aboutMe,iso2Code,capitalCity,permalinkUrl,standardLinks,displayName" />
+		</properties>
+	</rule>
 </ruleset>
