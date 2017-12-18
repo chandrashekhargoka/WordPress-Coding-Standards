@@ -8,7 +8,7 @@
 	<rule ref="WordPress-Extra"/>
 	<rule ref="WordPress.NamingConventions.ValidVariableName">
 		<properties>
-			<property name="customPropertiesWhitelist" type="array" value="hasChildNodes,childNodes,nodeValue,saveHTML,ownerDocument,searchInformation,cacheId,htmlTitle,htmlFormattedUrl,htmlSnippet,placesLived,aboutMe,iso2Code,capitalCity,standardLinks,permalinkUrl,resolvedPageUrl,pageUrl,diffbotUri" />
+			<property name="customPropertiesWhitelist" type="array" value="permalinkUrl,iso2Code,capitalCity,placesLived,aboutMe,searchInformation,cacheId,htmlTitle,htmlFormattedUrl,htmlSnippet,resolvedPageUrl,pageUrl" />
 		</properties>
 	</rule>
 </ruleset>
