@@ -7,6 +7,11 @@
  * @license https://opensource.org/licenses/MIT MIT
  */
 
+namespace WordPress\Sniffs\PHP;
+
+use WordPress\Sniff;
+use PHP_CodeSniffer_Tokens as Tokens;
+
 /**
  * Enforces Yoda conditional statements.
  *
@@ -16,8 +21,18 @@
  *
  * @since   0.3.0
  * @since   0.12.0 This class now extends WordPress_Sniff.
+ * @since   0.13.0 Class name changed: this class is now namespaced.
  */
-class WordPress_Sniffs_PHP_YodaConditionsSniff extends WordPress_Sniff {
+class YodaConditionsSniff extends Sniff {
+
+	/**
+	 * The tokens that indicate the start of a condition.
+	 *
+	 * @since 0.12.0
+	 *
+	 * @var array
+	 */
+	protected $condition_start_tokens;
 
 	/**
 	 * Returns an array of tokens this test wants to listen for.
@@ -25,6 +40,18 @@ class WordPress_Sniffs_PHP_YodaConditionsSniff extends WordPress_Sniff {
 	 * @return array
 	 */
 	public function register() {
+
+		$starters                       = Tokens::$booleanOperators;
+		$starters                      += Tokens::$assignmentTokens;
+		$starters[ T_CASE ]             = T_CASE;
+		$starters[ T_RETURN ]           = T_RETURN;
+		$starters[ T_INLINE_THEN ]      = T_INLINE_THEN;
+		$starters[ T_INLINE_ELSE ]      = T_INLINE_ELSE;
+		$starters[ T_SEMICOLON ]        = T_SEMICOLON;
+		$starters[ T_OPEN_PARENTHESIS ] = T_OPEN_PARENTHESIS;
+
+		$this->condition_start_tokens = $starters;
+
 		return array(
 			T_IS_EQUAL,
 			T_IS_NOT_EQUAL,
@@ -43,19 +70,15 @@ class WordPress_Sniffs_PHP_YodaConditionsSniff extends WordPress_Sniff {
 	 */
 	public function process_token( $stackPtr ) {
 
-		$beginners   = PHP_CodeSniffer_Tokens::$booleanOperators;
-		$beginners[] = T_IF;
-		$beginners[] = T_ELSEIF;
-
-		$beginning = $this->phpcsFile->findPrevious( $beginners, $stackPtr, null, false, null, true );
+		$start = $this->phpcsFile->findPrevious( $this->condition_start_tokens, $stackPtr, null, false, null, true );
 
 		$needs_yoda = false;
 
 		// Note: going backwards!
-		for ( $i = $stackPtr; $i > $beginning; $i-- ) {
+		for ( $i = $stackPtr; $i > $start; $i-- ) {
 
 			// Ignore whitespace.
-			if ( isset( PHP_CodeSniffer_Tokens::$emptyTokens[ $this->tokens[ $i ]['code'] ] ) ) {
+			if ( isset( Tokens::$emptyTokens[ $this->tokens[ $i ]['code'] ] ) ) {
 				continue;
 			}
 
@@ -68,7 +91,7 @@ class WordPress_Sniffs_PHP_YodaConditionsSniff extends WordPress_Sniff {
 			}
 
 			// If this is a function call or something, we are OK.
-			if ( in_array( $this->tokens[ $i ]['code'], array( T_CONSTANT_ENCAPSED_STRING, T_CLOSE_PARENTHESIS, T_OPEN_PARENTHESIS, T_RETURN ), true ) ) {
+			if ( T_CLOSE_PARENTHESIS === $this->tokens[ $i ]['code'] ) {
 				return;
 			}
 		}
@@ -78,18 +101,18 @@ class WordPress_Sniffs_PHP_YodaConditionsSniff extends WordPress_Sniff {
 		}
 
 		// Check if this is a var to var comparison, e.g.: if ( $var1 == $var2 ).
-		$next_non_empty = $this->phpcsFile->findNext( PHP_CodeSniffer_Tokens::$emptyTokens, ( $stackPtr + 1 ), null, true );
+		$next_non_empty = $this->phpcsFile->findNext( Tokens::$emptyTokens, ( $stackPtr + 1 ), null, true );
 
-		if ( isset( PHP_CodeSniffer_Tokens::$castTokens[ $this->tokens[ $next_non_empty ]['code'] ] ) ) {
-			$next_non_empty = $this->phpcsFile->findNext( PHP_CodeSniffer_Tokens::$emptyTokens, ( $next_non_empty + 1 ), null, true );
+		if ( isset( Tokens::$castTokens[ $this->tokens[ $next_non_empty ]['code'] ] ) ) {
+			$next_non_empty = $this->phpcsFile->findNext( Tokens::$emptyTokens, ( $next_non_empty + 1 ), null, true );
 		}
 
 		if ( in_array( $this->tokens[ $next_non_empty ]['code'], array( T_SELF, T_PARENT, T_STATIC ), true ) ) {
 			$next_non_empty = $this->phpcsFile->findNext(
-				array_merge( PHP_CodeSniffer_Tokens::$emptyTokens, array( T_DOUBLE_COLON ) )
-				, ( $next_non_empty + 1 )
-				, null
-				, true
+				array_merge( Tokens::$emptyTokens, array( T_DOUBLE_COLON ) ),
+				( $next_non_empty + 1 ),
+				null,
+				true
 			);
 		}
 

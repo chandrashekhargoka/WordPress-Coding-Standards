@@ -7,6 +7,11 @@
  * @license https://opensource.org/licenses/MIT MIT
  */
 
+namespace WordPress\Sniffs\WhiteSpace;
+
+use WordPress\Sniff;
+use PHP_CodeSniffer_Tokens as Tokens;
+
 /**
  * Enforces spacing around logical operators and assignments, based upon Squiz code.
  *
@@ -16,13 +21,14 @@
  * @since   2013-06-11 This sniff no longer supports JS.
  * @since   0.3.0      This sniff now has the ability to fix most errors it flags.
  * @since   0.7.0      This class now extends WordPress_Sniff.
+ * @since   0.13.0     Class name changed: this class is now namespaced.
  *
  * Last synced with base class 2017-01-15 at commit b024ad84656c37ef5733c6998ebc1e60957b2277.
- * Note: This class has diverged quite far from the original. All the same, checking occassionally
+ * Note: This class has diverged quite far from the original. All the same, checking occasionally
  * to see if there are upstream fixes made from which this sniff can benefit, is warranted.
  * @link    https://github.com/squizlabs/PHP_CodeSniffer/blob/master/CodeSniffer/Standards/Squiz/Sniffs/WhiteSpace/ControlStructureSpacingSniff.php
  */
-class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress_Sniff {
+class ControlStructureSpacingSniff extends Sniff {
 
 	/**
 	 * Check for blank lines on start/end of control structures.
@@ -41,7 +47,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 	/**
 	 * Require for space before T_COLON when using the alternative syntax for control structures.
 	 *
-	 * @var string one of 'required', 'forbidden', optional'
+	 * @var string one of 'required', 'forbidden', 'optional'
 	 */
 	public $space_before_colon = 'required';
 
@@ -117,9 +123,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 			$fix   = $this->phpcsFile->addFixableError( $error, $stackPtr, 'NoSpaceAfterStructureOpen' );
 
 			if ( true === $fix ) {
-				$this->phpcsFile->fixer->beginChangeset();
 				$this->phpcsFile->fixer->addContent( $stackPtr, ' ' );
-				$this->phpcsFile->fixer->endChangeset();
 			}
 		}
 
@@ -146,9 +150,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 					$fix   = $this->phpcsFile->addFixableError( $error, $scopeOpener, 'NoSpaceBetweenStructureColon' );
 
 					if ( true === $fix ) {
-						$this->phpcsFile->fixer->beginChangeset();
 						$this->phpcsFile->fixer->addContentBefore( $scopeOpener, ' ' );
-						$this->phpcsFile->fixer->endChangeset();
 					}
 				}
 			} elseif ( 'forbidden' === $this->space_before_colon ) {
@@ -158,15 +160,13 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 					$fix   = $this->phpcsFile->addFixableError( $error, ( $scopeOpener - 1 ), 'SpaceBetweenStructureColon' );
 
 					if ( true === $fix ) {
-						$this->phpcsFile->fixer->beginChangeset();
 						$this->phpcsFile->fixer->replaceToken( ( $scopeOpener - 1 ), '' );
-						$this->phpcsFile->fixer->endChangeset();
 					}
 				}
 			}
 		}
 
-		$parenthesisOpener = $this->phpcsFile->findNext( PHP_CodeSniffer_Tokens::$emptyTokens, ( $stackPtr + 1 ), null, true );
+		$parenthesisOpener = $this->phpcsFile->findNext( Tokens::$emptyTokens, ( $stackPtr + 1 ), null, true );
 
 		// If this is a function declaration.
 		if ( T_FUNCTION === $this->tokens[ $stackPtr ]['code'] ) {
@@ -179,7 +179,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 
 				// This function returns by reference (function &function_name() {}).
 				$parenthesisOpener = $this->phpcsFile->findNext(
-					PHP_CodeSniffer_Tokens::$emptyTokens,
+					Tokens::$emptyTokens,
 					( $parenthesisOpener + 1 ),
 					null,
 					true
@@ -189,7 +189,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 
 			if ( isset( $function_name_ptr ) ) {
 				$parenthesisOpener = $this->phpcsFile->findNext(
-					PHP_CodeSniffer_Tokens::$emptyTokens,
+					Tokens::$emptyTokens,
 					( $parenthesisOpener + 1 ),
 					null,
 					true
@@ -207,9 +207,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 					);
 
 					if ( true === $fix ) {
-						$this->phpcsFile->fixer->beginChangeset();
 						$this->phpcsFile->fixer->replaceToken( ( $function_name_ptr + 1 ), '' );
-						$this->phpcsFile->fixer->endChangeset();
 					}
 				}
 			}
@@ -219,7 +217,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 			if ( isset( $this->tokens[ $parenthesisOpener ]['parenthesis_closer'] ) ) {
 
 				$usePtr = $this->phpcsFile->findNext(
-					PHP_CodeSniffer_Tokens::$emptyTokens,
+					Tokens::$emptyTokens,
 					( $this->tokens[ $parenthesisOpener ]['parenthesis_closer'] + 1 ),
 					null,
 					true,
@@ -250,9 +248,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 					$fix   = $this->phpcsFile->addFixableError( $error, $stackPtr, 'SpaceBeforeClosureOpenParenthesis' );
 
 					if ( true === $fix ) {
-						$this->phpcsFile->fixer->beginChangeset();
 						$this->phpcsFile->fixer->replaceToken( ( $stackPtr + 1 ), '' );
-						$this->phpcsFile->fixer->endChangeset();
 					}
 				}
 			} elseif (
@@ -268,9 +264,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 				$fix   = $this->phpcsFile->addFixableError( $error, $stackPtr, 'NoSpaceBeforeOpenParenthesis' );
 
 				if ( true === $fix ) {
-					$this->phpcsFile->fixer->beginChangeset();
 					$this->phpcsFile->fixer->addContent( $stackPtr, ' ' );
-					$this->phpcsFile->fixer->endChangeset();
 				}
 			}
 		}
@@ -289,9 +283,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 			);
 
 			if ( true === $fix ) {
-				$this->phpcsFile->fixer->beginChangeset();
 				$this->phpcsFile->fixer->replaceToken( ( $stackPtr + 1 ), ' ' );
-				$this->phpcsFile->fixer->endChangeset();
 			}
 		}
 
@@ -302,9 +294,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 				$fix   = $this->phpcsFile->addFixableError( $error, $stackPtr, 'NoSpaceAfterOpenParenthesis' );
 
 				if ( true === $fix ) {
-					$this->phpcsFile->fixer->beginChangeset();
 					$this->phpcsFile->fixer->addContent( $parenthesisOpener, ' ' );
-					$this->phpcsFile->fixer->endChangeset();
 				}
 			} elseif ( ( ' ' !== $this->tokens[ ( $parenthesisOpener + 1 ) ]['content']
 				&& "\n" !== $this->tokens[ ( $parenthesisOpener + 1 ) ]['content']
@@ -321,9 +311,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 				);
 
 				if ( true === $fix ) {
-					$this->phpcsFile->fixer->beginChangeset();
 					$this->phpcsFile->fixer->replaceToken( ( $parenthesisOpener + 1 ), ' ' );
-					$this->phpcsFile->fixer->endChangeset();
 				}
 			}
 		}
@@ -340,12 +328,10 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 					$fix   = $this->phpcsFile->addFixableError( $error, $parenthesisCloser, 'NoSpaceBeforeCloseParenthesis' );
 
 					if ( true === $fix ) {
-						$this->phpcsFile->fixer->beginChangeset();
 						$this->phpcsFile->fixer->addContentBefore( $parenthesisCloser, ' ' );
-						$this->phpcsFile->fixer->endChangeset();
 					}
 				} elseif ( ' ' !== $this->tokens[ ( $parenthesisCloser - 1 ) ]['content'] ) {
-					$prevNonEmpty = $this->phpcsFile->findPrevious( PHP_CodeSniffer_Tokens::$emptyTokens, ( $parenthesisCloser - 1 ), null, true );
+					$prevNonEmpty = $this->phpcsFile->findPrevious( Tokens::$emptyTokens, ( $parenthesisCloser - 1 ), null, true );
 					if ( $this->tokens[ ( $parenthesisCloser ) ]['line'] === $this->tokens[ ( $prevNonEmpty + 1 ) ]['line'] ) {
 						$error = 'Expected exactly one space before closing parenthesis; "%s" found.';
 						$fix   = $this->phpcsFile->addFixableError(
@@ -356,9 +342,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 						);
 
 						if ( true === $fix ) {
-							$this->phpcsFile->fixer->beginChangeset();
 							$this->phpcsFile->fixer->replaceToken( ( $parenthesisCloser - 1 ), ' ' );
-							$this->phpcsFile->fixer->endChangeset();
 						}
 					}
 				}
@@ -371,9 +355,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 					$fix   = $this->phpcsFile->addFixableError( $error, $scopeOpener, 'NoSpaceAfterCloseParenthesis' );
 
 					if ( true === $fix ) {
-						$this->phpcsFile->fixer->beginChangeset();
 						$this->phpcsFile->fixer->addContentBefore( $scopeOpener, ' ' );
-						$this->phpcsFile->fixer->endChangeset();
 					}
 				}
 			}
@@ -412,9 +394,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 				);
 
 				if ( true === $fix ) {
-					$this->phpcsFile->fixer->beginChangeset();
 					$this->phpcsFile->fixer->replaceToken( ( $parenthesisCloser + 1 ), ' ' );
-					$this->phpcsFile->fixer->endChangeset();
 				}
 			}
 		}
@@ -456,7 +436,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 			if ( $firstContent !== $scopeCloser ) {
 				$lastContent = $this->phpcsFile->findPrevious( T_WHITESPACE, ( $scopeCloser - 1 ), null, true );
 
-				$lastNonEmptyContent = $this->phpcsFile->findPrevious( PHP_CodeSniffer_Tokens::$emptyTokens, ( $scopeCloser - 1 ), null, true );
+				$lastNonEmptyContent = $this->phpcsFile->findPrevious( Tokens::$emptyTokens, ( $scopeCloser - 1 ), null, true );
 
 				$checkToken = $lastContent;
 				if ( isset( $this->tokens[ $lastNonEmptyContent ]['scope_condition'] ) ) {
@@ -506,7 +486,7 @@ class WordPress_Sniffs_WhiteSpace_ControlStructureSpacingSniff extends WordPress
 		if ( T_COMMENT === $this->tokens[ $trailingContent ]['code'] ) {
 			// Special exception for code where the comment about
 			// an ELSE or ELSEIF is written between the control structures.
-			$nextCode = $this->phpcsFile->findNext( PHP_CodeSniffer_Tokens::$emptyTokens, ( $scopeCloser + 1 ), null, true );
+			$nextCode = $this->phpcsFile->findNext( Tokens::$emptyTokens, ( $scopeCloser + 1 ), null, true );
 
 			if ( T_ELSE === $this->tokens[ $nextCode ]['code'] || T_ELSEIF === $this->tokens[ $nextCode ]['code'] ) {
 				$trailingContent = $nextCode;

@@ -7,13 +7,22 @@
  * @license https://opensource.org/licenses/MIT MIT
  */
 
+namespace WordPress\Tests\CSRF;
+
+use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
+
 /**
  * Unit test class for the NonceVerification sniff.
  *
  * @package WPCS\WordPressCodingStandards
+ *
  * @since   0.5.0
+ * @since   0.13.0 Class name changed: this class is now namespaced.
+ * @since   0.15.0 The sniff has been deprecated. This unit test file now
+ *                 only tests that the deprecation warnings are correctly thrown
+ *                 and that the sniff falls through to the parent correctly.
  */
-class WordPress_Tests_CSRF_NonceVerificationUnitTest extends AbstractSniffUnitTest {
+class NonceVerificationUnitTest extends AbstractSniffUnitTest {
 
 	/**
 	 * Returns the lines where errors should occur.
@@ -23,22 +32,7 @@ class WordPress_Tests_CSRF_NonceVerificationUnitTest extends AbstractSniffUnitTe
 	public function getErrorList() {
 
 		return array(
-			5   => 1,
-			9   => 1,
-			31  => 1,
-			44  => 1,
-			48  => 1,
-			69  => 1,
-			89  => 1,
-			113 => 1,
-			114 => 1,
-			122 => 1,
-			126 => 1,
-			148 => 1,
-			150 => 1,
-			159 => 1,
-			160 => 1,
-			161 => 1,
+			4 => 1,
 		);
 	}
 
@@ -48,7 +42,9 @@ class WordPress_Tests_CSRF_NonceVerificationUnitTest extends AbstractSniffUnitTe
 	 * @return array <int line number> => <int number of warnings>
 	 */
 	public function getWarningList() {
-		return array();
+		return array(
+			1 => 2,
+		);
 
 	}
 

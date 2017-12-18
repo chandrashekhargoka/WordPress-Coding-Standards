@@ -7,13 +7,22 @@
  * @license https://opensource.org/licenses/MIT MIT
  */
 
+namespace WordPress\Tests\VIP;
+
+use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
+
 /**
  * Unit test class for the SlowDBQuery sniff.
  *
  * @package WPCS\WordPressCodingStandards
+ *
  * @since   0.3.0
+ * @since   0.13.0 Class name changed: this class is now namespaced.
+ * @since   0.15.0 The sniff has been deprecated. This unit test file now
+ *                 only tests that the deprecation warnings are correctly thrown
+ *                 and that the sniff falls through to the parent correctly.
  */
-class WordPress_Tests_VIP_SlowDBQueryUnitTest extends AbstractSniffUnitTest {
+class SlowDBQueryUnitTest extends AbstractSniffUnitTest {
 
 	/**
 	 * Returns the lines where errors should occur.
@@ -32,13 +41,8 @@ class WordPress_Tests_VIP_SlowDBQueryUnitTest extends AbstractSniffUnitTest {
 	 */
 	public function getWarningList() {
 		return array(
-			4  => 1,
-			10 => 1,
-			15 => 1,
-			16 => 1,
-			19 => 2,
-			30 => 1,
-			32 => 1, // Warning about deprecated whitelist comment.
+			1 => 2,
+			4 => 1,
 		);
 
 	}

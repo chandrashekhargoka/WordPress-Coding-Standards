@@ -7,13 +7,22 @@
  * @license https://opensource.org/licenses/MIT MIT
  */
 
+namespace WordPress\Tests\VIP;
+
+use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
+
 /**
  * Unit test class for the PostsPerPage sniff.
  *
  * @package WPCS\WordPressCodingStandards
+ *
  * @since   0.3.0
+ * @since   0.13.0 Class name changed: this class is now namespaced.
+ * @since   0.15.0 This sniff has been split into two, with the check for high pagination
+ *                 limit being part of the WP category, and the check for pagination
+ *                 disabling being part of the VIP category.
  */
-class WordPress_Tests_VIP_PostsPerPageUnitTest extends AbstractSniffUnitTest {
+class PostsPerPageUnitTest extends AbstractSniffUnitTest {
 
 	/**
 	 * Returns the lines where errors should occur.
@@ -23,11 +32,11 @@ class WordPress_Tests_VIP_PostsPerPageUnitTest extends AbstractSniffUnitTest {
 	public function getErrorList() {
 		return array(
 			4  => 1,
-			5  => 1,
 			6  => 1,
-			11  => 2,
+			11 => 1,
 			13 => 1,
 			16 => 1,
+			17 => 1,
 		);
 
 	}
@@ -38,7 +47,9 @@ class WordPress_Tests_VIP_PostsPerPageUnitTest extends AbstractSniffUnitTest {
 	 * @return array <int line number> => <int number of warnings>
 	 */
 	public function getWarningList() {
-		return array();
+		return array(
+			1 => 1,
+		);
 
 	}
 

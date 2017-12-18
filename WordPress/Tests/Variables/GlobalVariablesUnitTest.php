@@ -7,13 +7,21 @@
  * @license https://opensource.org/licenses/MIT MIT
  */
 
+namespace WordPress\Tests\Variables;
+
+use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
+
 /**
  * Unit test class for the GlobalVariables sniff.
  *
  * @package WPCS\WordPressCodingStandards
+ *
  * @since   0.3.0
+ * @since   0.13.0 Class name changed: this class is now namespaced.
+ * @since   0.15.0 The sniff has been deprecated. This unit test file now
+ *                 only tests that the deprecation warnings are correctly thrown.
  */
-class WordPress_Tests_Variables_GlobalVariablesUnitTest extends AbstractSniffUnitTest {
+class GlobalVariablesUnitTest extends AbstractSniffUnitTest {
 
 	/**
 	 * Returns the lines where errors should occur.
@@ -21,20 +29,7 @@ class WordPress_Tests_Variables_GlobalVariablesUnitTest extends AbstractSniffUni
 	 * @return array <int line number> => <int number of errors>
 	 */
 	public function getErrorList() {
-		return array(
-			3   => 1,
-			6   => 1,
-			16  => 1,
-			17  => 1,
-			18  => 1,
-			25  => 1,
-			35  => 1,
-			36  => 1,
-			54  => 1,
-			95  => 1,
-			128 => 1,
-			133 => 1,
-		);
+		return array();
 
 	}
 
@@ -44,7 +39,9 @@ class WordPress_Tests_Variables_GlobalVariablesUnitTest extends AbstractSniffUni
 	 * @return array <int line number> => <int number of warnings>
 	 */
 	public function getWarningList() {
-		return array();
+		return array(
+			1 => 2,
+		);
 
 	}
 
