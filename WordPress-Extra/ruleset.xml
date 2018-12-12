@@ -4,6 +4,8 @@
 
 	<autoload>./../WordPress/PHPCSAliases.php</autoload>
 
+	<rule ref="WordPress-Core"/>
+
 	<!-- Generic PHP best practices.
 		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/pull/382 -->
 	<rule ref="Generic.PHP.DeprecatedFunctions"/>
@@ -22,7 +24,6 @@
 			<property name="allowMultiline" value="true"/>
 		</properties>
 	</rule>
-	<rule ref="WordPress.CodeAnalysis.EmptyStatement"/>
 
 	<!-- Duplicate of upstream. Can be removed once minimum PHPCS requirement has gone up.
 		 https://github.com/squizlabs/PHP_CodeSniffer/pull/1594 -->
@@ -41,9 +42,12 @@
 
 	<!-- And yet more best practices.
 		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/1143 -->
-	<rule ref="PEAR.Files.IncludingFile">
-		<exclude name="PEAR.Files.IncludingFile.UseInclude"/>
-		<exclude name="PEAR.Files.IncludingFile.UseIncludeOnce"/>
+	<rule ref="PEAR.Files.IncludingFile"/>
+	<rule ref="PEAR.Files.IncludingFile.UseInclude">
+		<severity>0</severity>
+	</rule>
+	<rule ref="PEAR.Files.IncludingFile.UseIncludeOnce">
+		<severity>0</severity>
 	</rule>
 	<rule ref="PEAR.Files.IncludingFile.BracketsNotRequired">
 		<type>warning</type>
@@ -83,8 +87,6 @@
 		<message>Best practice suggestion: Declare only one trait in a file.</message>
 	</rule>
 
-	<rule ref="WordPress-Core"/>
-
 	<!-- Verify modifier keywords for declared methods and properties in classes.
 		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/1101 -->
 	<rule ref="Squiz.Scope.MethodScope"/>
@@ -103,6 +105,10 @@
 
 	<rule ref="WordPress.Security.EscapeOutput"/>
 
+	<!-- Encourage use of wp_safe_redirect() to avoid open redirect vulnerabilities.
+		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/pull/1264 -->
+	<rule ref="WordPress.Security.SafeRedirect"/>
+
 	<!-- Verify that a nonce check is done before using values in superglobals.
 		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/73 -->
 	<rule ref="WordPress.Security.NonceVerification"/>
@@ -112,6 +118,7 @@
 	<rule ref="WordPress.WP.DeprecatedFunctions"/>
 	<rule ref="WordPress.WP.DeprecatedClasses"/>
 	<rule ref="WordPress.WP.DeprecatedParameters"/>
+	<rule ref="WordPress.WP.DeprecatedParameterValues"/>
 	<rule ref="WordPress.WP.AlternativeFunctions"/>
 	<rule ref="WordPress.WP.DiscouragedConstants"/>
 	<rule ref="WordPress.WP.DiscouragedFunctions"/>
@@ -132,6 +139,10 @@
 		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/399
 		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/503 -->
 	<rule ref="WordPress.PHP.StrictInArray"/>
+
+	<!-- Check enqueue and register styles and scripts to have version and in_footer parameters explicitly set.
+		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/1146 -->
+	<rule ref="WordPress.WP.EnqueuedResourceParameters"/>
 
 	<!-- Discourage use of the backtick operator (execution of shell commands).
 		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/pull/646 -->
@@ -161,6 +172,27 @@
 	<rule ref="WordPress.WP.CronInterval"/>
 	<rule ref="WordPress.WP.PostsPerPage"/>
 	<rule ref="WordPress.WP.TimezoneChange"/>
+
+	<!-- Verify some regex best practices.
+		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/1371 -->
+	<rule ref="WordPress.PHP.PregQuoteDelimiter"/>
+
+	<!-- The Core ruleset respects the whitelist. For `Extra` the sniff is stricter.
+		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/pull/1450 -->
+	<rule ref="WordPress.PHP.NoSilencedErrors">
+		<properties>
+			<property name="use_default_whitelist" value="false"/>
+		</properties>
+	</rule>
+
+	<!-- Commented out code should not be committed.
+		 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/pull/1463 -->
+	<rule ref="Squiz.PHP.CommentedOutCode">
+		<properties>
+			<property name="maxPercentage" value="40"/>
+		</properties>
+	</rule>
+
 
 	<!--
 	#############################################################################

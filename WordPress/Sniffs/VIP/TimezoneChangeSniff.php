@@ -14,7 +14,7 @@ use WordPress\AbstractFunctionRestrictionsSniff;
 /**
  * Disallow the changing of timezone.
  *
- * @link    https://vip.wordpress.com/documentation/use-current_time-not-date_default_timezone_set/
+ * @link https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#manipulating-the-timezone-server-side
  *
  * @package WPCS\WordPressCodingStandards
  *
@@ -23,7 +23,7 @@ use WordPress\AbstractFunctionRestrictionsSniff;
  *                 Generic_Sniffs_PHP_ForbiddenFunctionsSniff.
  * @since   0.13.0 Class name changed: this class is now namespaced.
  *
- * @deprecated 0.15.0 This sniff has been moved to the `WP` category.
+ * @deprecated 1.0.0  This sniff has been moved to the `WP` category.
  *                    This file remains for now to prevent BC breaks.
  */
 class TimezoneChangeSniff extends \WordPress\Sniffs\WP\TimezoneChangeSniff {
@@ -32,7 +32,7 @@ class TimezoneChangeSniff extends \WordPress\Sniffs\WP\TimezoneChangeSniff {
 	 * Keep track of whether the warnings have been thrown to prevent
 	 * the messages being thrown for every token triggering the sniff.
 	 *
-	 * @since 0.15.0
+	 * @since 1.0.0
 	 *
 	 * @var array
 	 */
@@ -44,7 +44,7 @@ class TimezoneChangeSniff extends \WordPress\Sniffs\WP\TimezoneChangeSniff {
 	/**
 	 * Don't use.
 	 *
-	 * @deprecated 0.15.0
+	 * @deprecated 1.0.0
 	 *
 	 * @param int $stackPtr The position of the current token in the stack.
 	 *
@@ -52,28 +52,24 @@ class TimezoneChangeSniff extends \WordPress\Sniffs\WP\TimezoneChangeSniff {
 	 */
 	public function process_token( $stackPtr ) {
 		if ( false === $this->thrown['DeprecatedSniff'] ) {
-			$this->phpcsFile->addWarning(
-				'The "WordPress.VIP.TimezoneChange" sniff has been renamed to "WordPress.VIP.TimezoneChange". Please update your custom ruleset.',
+			$this->thrown['DeprecatedSniff'] = $this->phpcsFile->addWarning(
+				'The "WordPress.VIP.TimezoneChange" sniff has been renamed to "WordPress.WP.TimezoneChange". Please update your custom ruleset.',
 				0,
 				'DeprecatedSniff'
 			);
-
-			$this->thrown['DeprecatedSniff'] = true;
 		}
 
 		if ( ! empty( $this->exclude )
 			&& false === $this->thrown['FoundPropertyForDeprecatedSniff']
 		) {
-			$this->phpcsFile->addWarning(
-				'The "WordPress.VIP.TimezoneChange" sniff has been renamed to "WordPress.VIP.TimezoneChange". Please update your custom ruleset.',
+			$this->thrown['FoundPropertyForDeprecatedSniff'] = $this->phpcsFile->addWarning(
+				'The "WordPress.VIP.TimezoneChange" sniff has been renamed to "WordPress.WP.TimezoneChange". Please update your custom ruleset.',
 				0,
 				'FoundPropertyForDeprecatedSniff'
 			);
-
-			$this->thrown['FoundPropertyForDeprecatedSniff'] = true;
 		}
 
 		return parent::process_token( $stackPtr );
 	}
 
-} // End class.
+}

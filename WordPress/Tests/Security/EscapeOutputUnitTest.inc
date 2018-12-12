@@ -257,3 +257,31 @@ echo esc_html_x( $some_nasty_var, 'context' ); // Ok.
 ?>
 	<input type="hidden" name="some-action" value="<?php echo esc_attr_x( 'none', 'context' ); ?>" /><!-- OK. -->
 <?php
+
+echo PHP_VERSION_ID, PHP_VERSION, PHP_EOL, PHP_EXTRA_VERSION; // OK.
+
+trigger_error( 'DEBUG INFO - ' . __METHOD__ . '::internal_domains: domain = ' . $domain ); // Bad.
+trigger_error( $domain ); // Bad.
+
+vprintf( 'Hello %s', [ $foo ] ); // Bad.
+vprintf( 'Hello %s', [ esc_html( $foo ) ] ); // Ok.
+
+function testIt( $obj ) {
+	$obj->print = new \Printer();
+	$obj->exit->customExit();
+	return $obj->print->transform( 'something' );
+}
+
+class Silly {
+	function echo() {}
+	function print() {}
+}
+
+echo  // phpcs:ignore WP.Secur1ty.EscapeOutput -- WPCS: XSS ok. (sniff name mangled on purpose).
+	esc_html( $something ),
+	$something_else,
+	esc_html( $something_more );
+
+echo esc_html( $something ),
+	$something_else,
+	esc_html( $something_more ); // phpcs:ignore WP.Secur1ty.EscapeOutput -- WPCS: XSS ok. (sniff name mangled on purpose).

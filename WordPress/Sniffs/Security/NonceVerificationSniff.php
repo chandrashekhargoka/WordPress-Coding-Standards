@@ -20,7 +20,7 @@ use WordPress\Sniff;
  *
  * @since   0.5.0
  * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.15.0 This sniff has been moved from the `CSRF` category to the `Security` category.
+ * @since   1.0.0  This sniff has been moved from the `CSRF` category to the `Security` category.
  */
 class NonceVerificationSniff extends Sniff {
 
@@ -105,9 +105,9 @@ class NonceVerificationSniff extends Sniff {
 	 * @var array
 	 */
 	protected $addedCustomFunctions = array(
-		'nonce'           => null,
-		'sanitize'        => null,
-		'unslashsanitize' => null,
+		'nonce'           => array(),
+		'sanitize'        => array(),
+		'unslashsanitize' => array(),
 	);
 
 	/**
@@ -118,7 +118,7 @@ class NonceVerificationSniff extends Sniff {
 	public function register() {
 
 		return array(
-			T_VARIABLE,
+			\T_VARIABLE,
 		);
 	}
 
@@ -162,8 +162,7 @@ class NonceVerificationSniff extends Sniff {
 			$this->superglobals[ $instance['content'] ],
 			'NoNonceVerification'
 		);
-
-	} // End process_token().
+	}
 
 	/**
 	 * Merge custom functions provided via a custom ruleset with the defaults, if we haven't already.
@@ -201,4 +200,4 @@ class NonceVerificationSniff extends Sniff {
 		}
 	}
 
-} // End class.
+}

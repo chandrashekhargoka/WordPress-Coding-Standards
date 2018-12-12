@@ -14,14 +14,14 @@ use WordPress\AbstractFunctionParameterSniff;
 /**
  * Warn about __FILE__ for page registration.
  *
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#using-__file__-for-page-registration
+ * @link    https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#using-__file__-for-page-registration
  *
  * @package WPCS\WordPressCodingStandards
  *
  * @since   0.3.0
  * @since   0.11.0 Refactored to extend the new WordPress_AbstractFunctionParameterSniff.
  * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.15.0 This sniff has been moved from the `VIP` category to the `Security` category.
+ * @since   1.0.0  This sniff has been moved from the `VIP` category to the `Security` category.
  */
 class PluginMenuSlugSniff extends AbstractFunctionParameterSniff {
 
@@ -76,7 +76,7 @@ class PluginMenuSlugSniff extends AbstractFunctionParameterSniff {
 	public function process_parameters( $stackPtr, $group_name, $matched_content, $parameters ) {
 		foreach ( $this->target_functions[ $matched_content ] as $position ) {
 			if ( isset( $parameters[ $position ] ) ) {
-				$file_constant = $this->phpcsFile->findNext( T_FILE, $parameters[ $position ]['start'], ( $parameters[ $position ]['end'] + 1 ) );
+				$file_constant = $this->phpcsFile->findNext( \T_FILE, $parameters[ $position ]['start'], ( $parameters[ $position ]['end'] + 1 ) );
 
 				if ( false !== $file_constant ) {
 					$this->phpcsFile->addWarning( 'Using __FILE__ for menu slugs risks exposing filesystem structure.', $stackPtr, 'Using__FILE__' );
@@ -85,4 +85,4 @@ class PluginMenuSlugSniff extends AbstractFunctionParameterSniff {
 		}
 	}
 
-} // End class.
+}

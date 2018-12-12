@@ -15,7 +15,7 @@ use PHP_CodeSniffer_Tokens as Tokens;
 /**
  * Flag cron schedules less than 15 minutes.
  *
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#cron-schedules-less-than-15-minutes-or-expensive-events
+ * @link    https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#cron-schedules-less-than-15-minutes-or-expensive-events
  *
  * @package WPCS\WordPressCodingStandards
  *
@@ -24,7 +24,7 @@ use PHP_CodeSniffer_Tokens as Tokens;
  *                 - Now deals correctly with WP time constants.
  * @since   0.13.0 Class name changed: this class is now namespaced.
  * @since   0.14.0 The minimum cron interval tested against is now configurable.
- * @since   0.15.0 This sniff has been moved from the `VIP` category to the `WP` category.
+ * @since   1.0.0  This sniff has been moved from the `VIP` category to the `WP` category.
  */
 class CronIntervalSniff extends Sniff {
 
@@ -62,10 +62,9 @@ class CronIntervalSniff extends Sniff {
 	 */
 	public function register() {
 		return array(
-			T_CONSTANT_ENCAPSED_STRING,
-			T_DOUBLE_QUOTED_STRING,
+			\T_CONSTANT_ENCAPSED_STRING,
+			\T_DOUBLE_QUOTED_STRING,
 		);
-
 	}
 
 	/**
@@ -83,7 +82,7 @@ class CronIntervalSniff extends Sniff {
 		}
 
 		// If within add_filter.
-		$functionPtr = $this->phpcsFile->findPrevious( T_STRING, key( $token['nested_parenthesis'] ) );
+		$functionPtr = $this->phpcsFile->findPrevious( \T_STRING, key( $token['nested_parenthesis'] ) );
 		if ( false === $functionPtr || 'add_filter' !== $this->tokens[ $functionPtr ]['content'] ) {
 			return;
 		}
@@ -98,8 +97,8 @@ class CronIntervalSniff extends Sniff {
 
 		// If callback is array, get second element.
 		if ( false !== $callbackArrayPtr
-			&& ( T_ARRAY === $this->tokens[ $callbackArrayPtr ]['code']
-				|| T_OPEN_SHORT_ARRAY === $this->tokens[ $callbackArrayPtr ]['code'] )
+			&& ( \T_ARRAY === $this->tokens[ $callbackArrayPtr ]['code']
+				|| \T_OPEN_SHORT_ARRAY === $this->tokens[ $callbackArrayPtr ]['code'] )
 		) {
 			$callback = $this->get_function_call_parameter( $callbackArrayPtr, 2 );
 
@@ -112,20 +111,20 @@ class CronIntervalSniff extends Sniff {
 		unset( $functionPtr );
 
 		// Search for the function in tokens.
-		$callbackFunctionPtr = $this->phpcsFile->findNext( array( T_CONSTANT_ENCAPSED_STRING, T_DOUBLE_QUOTED_STRING, T_CLOSURE ), $callback['start'], ( $callback['end'] + 1 ) );
+		$callbackFunctionPtr = $this->phpcsFile->findNext( array( \T_CONSTANT_ENCAPSED_STRING, \T_DOUBLE_QUOTED_STRING, \T_CLOSURE ), $callback['start'], ( $callback['end'] + 1 ) );
 
 		if ( false === $callbackFunctionPtr ) {
 			$this->confused( $stackPtr );
 			return;
 		}
 
-		if ( T_CLOSURE === $this->tokens[ $callbackFunctionPtr ]['code'] ) {
+		if ( \T_CLOSURE === $this->tokens[ $callbackFunctionPtr ]['code'] ) {
 			$functionPtr = $callbackFunctionPtr;
 		} else {
 			$functionName = $this->strip_quotes( $this->tokens[ $callbackFunctionPtr ]['content'] );
 
 			for ( $ptr = 0; $ptr < $this->phpcsFile->numTokens; $ptr++ ) {
-				if ( T_FUNCTION === $this->tokens[ $ptr ]['code'] ) {
+				if ( \T_FUNCTION === $this->tokens[ $ptr ]['code'] ) {
 					$foundName = $this->phpcsFile->getDeclarationName( $ptr );
 					if ( $foundName === $functionName ) {
 						$functionPtr = $ptr;
@@ -151,17 +150,23 @@ class CronIntervalSniff extends Sniff {
 		$closing = $this->tokens[ $functionPtr ]['scope_closer'];
 		for ( $i = $opening; $i <= $closing; $i++ ) {
 
-			if ( in_array( $this->tokens[ $i ]['code'], array( T_CONSTANT_ENCAPSED_STRING, T_DOUBLE_QUOTED_STRING ), true ) ) {
+			if ( \in_array( $this->tokens[ $i ]['code'], array( \T_CONSTANT_ENCAPSED_STRING, \T_DOUBLE_QUOTED_STRING ), true ) ) {
 				if ( 'interval' === $this->strip_quotes( $this->tokens[ $i ]['content'] ) ) {
-					$operator = $this->phpcsFile->findNext( T_DOUBLE_ARROW, $i, null, false, null, true );
+					$operator = $this->phpcsFile->findNext( \T_DOUBLE_ARROW, $i, null, false, null, true );
 					if ( false === $operator ) {
 						$this->confused( $stackPtr );
 						return;
 					}
 
-					$valueStart = $this->phpcsFile->findNext( T_WHITESPACE, ( $operator + 1 ), null, true, null, true );
-					$valueEnd   = $this->phpcsFile->findNext( array( T_COMMA, T_CLOSE_PARENTHESIS ), ( $valueStart + 1 ) );
-					$value      = $this->phpcsFile->getTokensAsString( $valueStart, ( $valueEnd - $valueStart ) );
+					$valueStart = $this->phpcsFile->findNext( Tokens::$emptyTokens, ( $operator + 1 ), null, true, null, true );
+					$valueEnd   = $this->phpcsFile->findNext( array( \T_COMMA, \T_CLOSE_PARENTHESIS ), ( $valueStart + 1 ) );
+					$value      = '';
+					for ( $j = $valueStart; $j < $valueEnd; $j++ ) {
+						if ( isset( Tokens::$emptyTokens[ $this->tokens[ $j ]['code'] ] ) ) {
+							continue;
+						}
+						$value .= $this->tokens[ $j ]['content'];
+					}
 
 					if ( is_numeric( $value ) ) {
 						$interval = $value;
@@ -198,8 +203,7 @@ class CronIntervalSniff extends Sniff {
 			);
 			return;
 		}
-
-	} // End process_token().
+	}
 
 	/**
 	 * Add warning about unclear cron schedule change.
@@ -214,4 +218,4 @@ class CronIntervalSniff extends Sniff {
 		);
 	}
 
-} // End class.
+}

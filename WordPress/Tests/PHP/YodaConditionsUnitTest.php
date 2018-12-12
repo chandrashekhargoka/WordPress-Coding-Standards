@@ -46,8 +46,8 @@ class YodaConditionsUnitTest extends AbstractSniffUnitTest {
 			119 => 1,
 			125 => 1,
 			135 => 1,
+			140 => 1,
 		);
-
 	}
 
 	/**
@@ -57,7 +57,6 @@ class YodaConditionsUnitTest extends AbstractSniffUnitTest {
 	 */
 	public function getWarningList() {
 		return array();
-
 	}
 
-} // End class.
+}

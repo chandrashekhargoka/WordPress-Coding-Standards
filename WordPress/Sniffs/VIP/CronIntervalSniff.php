@@ -15,7 +15,7 @@ use PHP_CodeSniffer_Tokens as Tokens;
 /**
  * Flag cron schedules less than 15 minutes.
  *
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#cron-schedules-less-than-15-minutes-or-expensive-events
+ * @link https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#cron-schedules-less-than-15-minutes-or-expensive-events
  *
  * @package WPCS\WordPressCodingStandards
  *
@@ -25,7 +25,7 @@ use PHP_CodeSniffer_Tokens as Tokens;
  * @since   0.13.0 Class name changed: this class is now namespaced.
  * @since   0.14.0 The minimum cron interval tested against is now configurable.
  *
- * @deprecated 0.15.0 This sniff has been moved to the `WP` category.
+ * @deprecated 1.0.0  This sniff has been moved to the `WP` category.
  *                    This file remains for now to prevent BC breaks.
  */
 class CronIntervalSniff extends \WordPress\Sniffs\WP\CronIntervalSniff {
@@ -46,7 +46,7 @@ class CronIntervalSniff extends \WordPress\Sniffs\WP\CronIntervalSniff {
 	 * Keep track of whether the warnings have been thrown to prevent
 	 * the messages being thrown for every token triggering the sniff.
 	 *
-	 * @since 0.15.0
+	 * @since 1.0.0
 	 *
 	 * @var array
 	 */
@@ -58,7 +58,7 @@ class CronIntervalSniff extends \WordPress\Sniffs\WP\CronIntervalSniff {
 	/**
 	 * Don't use.
 	 *
-	 * @deprecated 0.15.0
+	 * @deprecated 1.0.0
 	 *
 	 * @param int $stackPtr The position of the current token in the stack.
 	 *
@@ -66,28 +66,24 @@ class CronIntervalSniff extends \WordPress\Sniffs\WP\CronIntervalSniff {
 	 */
 	public function process_token( $stackPtr ) {
 		if ( false === $this->thrown['DeprecatedSniff'] ) {
-			$this->phpcsFile->addWarning(
+			$this->thrown['DeprecatedSniff'] = $this->phpcsFile->addWarning(
 				'The "WordPress.VIP.CronInterval" sniff has been renamed to "WordPress.WP.CronInterval". Please update your custom ruleset.',
 				0,
 				'DeprecatedSniff'
 			);
-
-			$this->thrown['DeprecatedSniff'] = true;
 		}
 
 		if ( 900 !== (int) $this->min_interval
 			&& false === $this->thrown['FoundPropertyForDeprecatedSniff']
 		) {
-			$this->phpcsFile->addWarning(
+			$this->thrown['FoundPropertyForDeprecatedSniff'] = $this->phpcsFile->addWarning(
 				'The "WordPress.VIP.CronInterval" sniff has been renamed to "WordPress.WP.CronInterval". Please update your custom ruleset.',
 				0,
 				'FoundPropertyForDeprecatedSniff'
 			);
-
-			$this->thrown['FoundPropertyForDeprecatedSniff'] = true;
 		}
 
 		return parent::process_token( $stackPtr );
 	}
 
-} // End class.
+}

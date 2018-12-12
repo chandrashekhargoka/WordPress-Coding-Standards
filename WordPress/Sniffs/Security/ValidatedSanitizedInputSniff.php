@@ -22,7 +22,7 @@ use WordPress\Sniff;
  * @since   0.4.0  This class now extends WordPress_Sniff.
  * @since   0.5.0  Method getArrayIndexKey() has been moved to WordPress_Sniff.
  * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.15.0 This sniff has been moved from the `VIP` category to the `Security` category.
+ * @since   1.0.0  This sniff has been moved from the `VIP` category to the `Security` category.
  */
 class ValidatedSanitizedInputSniff extends Sniff {
 
@@ -63,8 +63,8 @@ class ValidatedSanitizedInputSniff extends Sniff {
 	 * @var array
 	 */
 	protected $addedCustomFunctions = array(
-		'sanitize'        => null,
-		'unslashsanitize' => null,
+		'sanitize'        => array(),
+		'unslashsanitize' => array(),
 	);
 
 	/**
@@ -74,9 +74,9 @@ class ValidatedSanitizedInputSniff extends Sniff {
 	 */
 	public function register() {
 		return array(
-			T_VARIABLE,
-			T_DOUBLE_QUOTED_STRING,
-			T_HEREDOC,
+			\T_VARIABLE,
+			\T_DOUBLE_QUOTED_STRING,
+			\T_HEREDOC,
 		);
 	}
 
@@ -92,8 +92,8 @@ class ValidatedSanitizedInputSniff extends Sniff {
 		$superglobals = $this->input_superglobals;
 
 		// Handling string interpolation.
-		if ( T_DOUBLE_QUOTED_STRING === $this->tokens[ $stackPtr ]['code']
-			|| T_HEREDOC === $this->tokens[ $stackPtr ]['code']
+		if ( \T_DOUBLE_QUOTED_STRING === $this->tokens[ $stackPtr ]['code']
+			|| \T_HEREDOC === $this->tokens[ $stackPtr ]['code']
 		) {
 			$interpolated_variables = array_map(
 				function ( $symbol ) {
@@ -109,7 +109,7 @@ class ValidatedSanitizedInputSniff extends Sniff {
 		}
 
 		// Check if this is a superglobal.
-		if ( ! in_array( $this->tokens[ $stackPtr ]['content'], $superglobals, true ) ) {
+		if ( ! \in_array( $this->tokens[ $stackPtr ]['content'], $superglobals, true ) ) {
 			return;
 		}
 
@@ -152,8 +152,7 @@ class ValidatedSanitizedInputSniff extends Sniff {
 		if ( ! $this->is_sanitized( $stackPtr, true ) ) {
 			$this->phpcsFile->addError( 'Detected usage of a non-sanitized input variable: %s', $stackPtr, 'InputNotSanitized', $error_data );
 		}
-
-	} // End process_token().
+	}
 
 	/**
 	 * Merge custom functions provided via a custom ruleset with the defaults, if we haven't already.
@@ -182,4 +181,4 @@ class ValidatedSanitizedInputSniff extends Sniff {
 		}
 	}
 
-} // End class.
+}

@@ -18,7 +18,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
  *
  * @since   0.3.0
  * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.15.0 The sniff has been deprecated. This unit test file now
+ * @since   1.0.0  The sniff has been deprecated. This unit test file now
  *                 only tests that the deprecation warnings are correctly thrown
  *                 and that the sniff falls through to the parent correctly.
  */
@@ -33,7 +33,6 @@ class TimezoneChangeUnitTest extends AbstractSniffUnitTest {
 		return array(
 			4 => 1,
 		);
-
 	}
 
 	/**
@@ -45,7 +44,6 @@ class TimezoneChangeUnitTest extends AbstractSniffUnitTest {
 		return array(
 			1 => 2,
 		);
-
 	}
 
-} // End class.
+}

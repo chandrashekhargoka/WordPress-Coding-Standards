@@ -13,10 +13,9 @@ use WordPress\Sniff;
 use PHP_CodeSniffer_Tokens as Tokens;
 
 /**
- * Flag Database direct queries.
+ * Flag direct database queries.
  *
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#direct-database-queries
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#database-alteration
+ * @link https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#direct-database-queries
  *
  * @package WPCS\WordPressCodingStandards
  *
@@ -25,7 +24,7 @@ use PHP_CodeSniffer_Tokens as Tokens;
  * @since   0.11.0 This class now extends WordPress_Sniff.
  * @since   0.13.0 Class name changed: this class is now namespaced.
  *
- * @deprecated 0.15.0 This sniff has been moved to the `DB` category.
+ * @deprecated 1.0.0  This sniff has been moved to the `DB` category.
  *                    This file remains for now to prevent BC breaks.
  */
 class DirectDatabaseQuerySniff extends \WordPress\Sniffs\DB\DirectDatabaseQuerySniff {
@@ -34,7 +33,7 @@ class DirectDatabaseQuerySniff extends \WordPress\Sniffs\DB\DirectDatabaseQueryS
 	 * Keep track of whether the warnings have been thrown to prevent
 	 * the messages being thrown for every token triggering the sniff.
 	 *
-	 * @since 0.15.0
+	 * @since 1.0.0
 	 *
 	 * @var array
 	 */
@@ -46,7 +45,7 @@ class DirectDatabaseQuerySniff extends \WordPress\Sniffs\DB\DirectDatabaseQueryS
 	/**
 	 * Don't use.
 	 *
-	 * @deprecated 0.15.0
+	 * @deprecated 1.0.0
 	 *
 	 * @param int $stackPtr The position of the current token in the stack.
 	 *
@@ -54,30 +53,26 @@ class DirectDatabaseQuerySniff extends \WordPress\Sniffs\DB\DirectDatabaseQueryS
 	 */
 	public function process_token( $stackPtr ) {
 		if ( false === $this->thrown['DeprecatedSniff'] ) {
-			$this->phpcsFile->addWarning(
+			$this->thrown['DeprecatedSniff'] = $this->phpcsFile->addWarning(
 				'The "WordPress.VIP.DirectDatabaseQuery" sniff has been renamed to "WordPress.DB.DirectDatabaseQuery". Please update your custom ruleset.',
 				0,
 				'DeprecatedSniff'
 			);
-
-			$this->thrown['DeprecatedSniff'] = true;
 		}
 
-		if ( ( $this->customCacheGetFunctions !== $this->addedCustomFunctions['cacheget']
-			|| $this->customCacheSetFunctions !== $this->addedCustomFunctions['cacheset']
-			|| $this->customCacheDeleteFunctions !== $this->addedCustomFunctions['cachedelete'] )
-			&& false === $this->thrown['FoundPropertyForDeprecatedSniff']
+		if ( false === $this->thrown['FoundPropertyForDeprecatedSniff']
+			&& ( ( array() !== $this->customCacheGetFunctions && $this->customCacheGetFunctions !== $this->addedCustomFunctions['cacheget'] )
+			|| ( array() !== $this->customCacheSetFunctions && $this->customCacheSetFunctions !== $this->addedCustomFunctions['cacheset'] )
+			|| ( array() !== $this->customCacheDeleteFunctions && $this->customCacheDeleteFunctions !== $this->addedCustomFunctions['cachedelete'] ) )
 		) {
-			$this->phpcsFile->addWarning(
+			$this->thrown['FoundPropertyForDeprecatedSniff'] = $this->phpcsFile->addWarning(
 				'The "WordPress.VIP.DirectDatabaseQuery" sniff has been renamed to "WordPress.DB.DirectDatabaseQuery". Please update your custom ruleset.',
 				0,
 				'FoundPropertyForDeprecatedSniff'
 			);
-
-			$this->thrown['FoundPropertyForDeprecatedSniff'] = true;
 		}
 
 		return parent::process_token( $stackPtr );
 	}
 
-} // End class.
+}

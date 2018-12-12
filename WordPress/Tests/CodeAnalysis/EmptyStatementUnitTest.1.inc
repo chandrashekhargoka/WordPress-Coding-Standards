@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Test empty statement: two consecutive semicolons without executable code between them.
+ * Test empty statement: two consecutive semi-colons without executable code between them.
  */
 function_call(); // OK.
 
@@ -42,4 +42,11 @@ function_call();
 -->
 <?php ; ?>
 
-<input name="<?php ; ?>" />
+<input name="<?php ; ?>" /> <!-- Bad. -->
+
+<!-- Tests with short open echo tag. -->
+<input name="<?= 'some text' ?>" /> <!-- OK. -->
+
+<?php
+// Guard against false positives for two consecutive semi-colons in a for statement.
+for ( $i = 0; ; $i++ ) {}

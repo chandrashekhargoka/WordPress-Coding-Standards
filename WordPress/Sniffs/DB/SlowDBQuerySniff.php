@@ -14,7 +14,7 @@ use WordPress\AbstractArrayAssignmentRestrictionsSniff;
 /**
  * Flag potentially slow queries.
  *
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#uncached-pageload
+ * @link    https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#uncached-pageload
  *
  * @package WPCS\WordPressCodingStandards
  *
@@ -23,7 +23,7 @@ use WordPress\AbstractArrayAssignmentRestrictionsSniff;
  *                 comment, replacing the 'tax_query' whitelist comment which is now
  *                 deprecated.
  * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.15.0 This sniff has been moved from the `VIP` category to the `DB` category.
+ * @since   1.0.0  This sniff has been moved from the `VIP` category to the `DB` category.
  */
 class SlowDBQuerySniff extends AbstractArrayAssignmentRestrictionsSniff {
 
@@ -68,7 +68,7 @@ class SlowDBQuerySniff extends AbstractArrayAssignmentRestrictionsSniff {
 			 * Only throw the warning about a deprecated comment when the sniff would otherwise
 			 * have been triggered on the array key.
 			 */
-			if ( in_array( $this->tokens[ $stackPtr ]['code'], array( T_CONSTANT_ENCAPSED_STRING, T_DOUBLE_QUOTED_STRING ), true ) ) {
+			if ( \in_array( $this->tokens[ $stackPtr ]['code'], array( \T_CONSTANT_ENCAPSED_STRING, \T_DOUBLE_QUOTED_STRING ), true ) ) {
 				$this->phpcsFile->addWarning(
 					'The "tax_query" whitelist comment is deprecated in favor of the "slow query" whitelist comment.',
 					$stackPtr,
@@ -97,4 +97,4 @@ class SlowDBQuerySniff extends AbstractArrayAssignmentRestrictionsSniff {
 		return true;
 	}
 
-} // End class.
+}

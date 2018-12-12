@@ -18,7 +18,7 @@ use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
  *
  * @since   0.5.0
  * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.15.0 This sniff has been moved from the `CSRF` category to the `Security` category.
+ * @since   1.0.0  This sniff has been moved from the `CSRF` category to the `Security` category.
  */
 class NonceVerificationUnitTest extends AbstractSniffUnitTest {
 
@@ -56,7 +56,6 @@ class NonceVerificationUnitTest extends AbstractSniffUnitTest {
 	 */
 	public function getWarningList() {
 		return array();
-
 	}
 
-} // End class.
+}

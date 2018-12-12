@@ -14,14 +14,14 @@ use WordPress\AbstractArrayAssignmentRestrictionsSniff;
 /**
  * Flag returning high or infinite posts_per_page.
  *
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#no-limit-queries
+ * @link https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#no-limit-queries
  *
  * @package WPCS\WordPressCodingStandards
  *
  * @since   0.3.0
  * @since   0.13.0 Class name changed: this class is now namespaced.
  * @since   0.14.0 Added the posts_per_page property.
- * @since   0.15.0 This sniff has been split into two, with the check for high pagination
+ * @since   1.0.0  This sniff has been split into two, with the check for high pagination
  *                 limit being part of the WP category, and the check for pagination
  *                 disabling being part of the VIP category.
  */
@@ -33,7 +33,7 @@ class PostsPerPageSniff extends AbstractArrayAssignmentRestrictionsSniff {
 	 * Posts per page limit to check against.
 	 *
 	 * @since      0.14.0
-	 * @deprecated 0.15.0 Property is used by the WP version of the sniff.
+	 * @deprecated 1.0.0  Property is used by the WP version of the sniff.
 	 *
 	 * @var int
 	 */
@@ -42,7 +42,7 @@ class PostsPerPageSniff extends AbstractArrayAssignmentRestrictionsSniff {
 	/**
 	 * Keep track of whether the deprecated property warning has been thrown.
 	 *
-	 * @since 0.15.0
+	 * @since 1.0.0
 	 *
 	 * @var array
 	 */
@@ -94,7 +94,7 @@ class PostsPerPageSniff extends AbstractArrayAssignmentRestrictionsSniff {
 		$key = strtolower( $key );
 
 		if ( ( 'nopaging' === $key && ( 'true' === $val || 1 === $val ) )
-			|| ( in_array( $key, array( 'numberposts', 'posts_per_page' ), true ) && '-1' === $val )
+			|| ( \in_array( $key, array( 'numberposts', 'posts_per_page' ), true ) && '-1' === $val )
 		) {
 			return 'Disabling pagination is prohibited in VIP context, do not set `%s` to `%s` ever.';
 		}
@@ -102,4 +102,4 @@ class PostsPerPageSniff extends AbstractArrayAssignmentRestrictionsSniff {
 		return false;
 	}
 
-} // End class.
+}

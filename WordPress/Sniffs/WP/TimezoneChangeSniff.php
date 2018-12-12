@@ -14,7 +14,7 @@ use WordPress\AbstractFunctionRestrictionsSniff;
 /**
  * Disallow the changing of timezone.
  *
- * @link    https://vip.wordpress.com/documentation/use-current_time-not-date_default_timezone_set/
+ * @link    https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#manipulating-the-timezone-server-side
  *
  * @package WPCS\WordPressCodingStandards
  *
@@ -22,7 +22,7 @@ use WordPress\AbstractFunctionRestrictionsSniff;
  * @since   0.11.0 Extends the WordPress_AbstractFunctionRestrictionsSniff instead of the
  *                 Generic_Sniffs_PHP_ForbiddenFunctionsSniff.
  * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.15.0 This sniff has been moved from the `VIP` category to the `WP` category.
+ * @since   1.0.0  This sniff has been moved from the `VIP` category to the `WP` category.
  */
 class TimezoneChangeSniff extends AbstractFunctionRestrictionsSniff {
 
@@ -49,6 +49,6 @@ class TimezoneChangeSniff extends AbstractFunctionRestrictionsSniff {
 				),
 			),
 		);
-	} // End getGroups().
+	}
 
-} // End class.
+}

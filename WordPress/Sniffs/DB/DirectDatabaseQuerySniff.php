@@ -15,8 +15,7 @@ use PHP_CodeSniffer_Tokens as Tokens;
 /**
  * Flag Database direct queries.
  *
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#direct-database-queries
- * @link    https://vip.wordpress.com/documentation/vip/code-review-what-we-look-for/#database-alteration
+ * @link    https://vip.wordpress.com/documentation/vip-go/code-review-blockers-warnings-notices/#direct-database-queries
  *
  * @package WPCS\WordPressCodingStandards
  *
@@ -24,7 +23,7 @@ use PHP_CodeSniffer_Tokens as Tokens;
  * @since   0.6.0  Removed the add_unique_message() function as it is no longer needed.
  * @since   0.11.0 This class now extends WordPress_Sniff.
  * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.15.0 This sniff has been moved from the `VIP` category to the `DB` category.
+ * @since   1.0.0  This sniff has been moved from the `VIP` category to the `DB` category.
  */
 class DirectDatabaseQuerySniff extends Sniff {
 
@@ -65,9 +64,9 @@ class DirectDatabaseQuerySniff extends Sniff {
 	 * @var array
 	 */
 	protected $addedCustomFunctions = array(
-		'cacheget'    => null,
-		'cacheset'    => null,
-		'cachedelete' => null,
+		'cacheget'    => array(),
+		'cacheset'    => array(),
+		'cachedelete' => array(),
 	);
 
 	/**
@@ -101,9 +100,8 @@ class DirectDatabaseQuerySniff extends Sniff {
 	 */
 	public function register() {
 		return array(
-			T_VARIABLE,
+			\T_VARIABLE,
 		);
-
 	}
 
 	/**
@@ -120,12 +118,12 @@ class DirectDatabaseQuerySniff extends Sniff {
 			return;
 		}
 
-		$is_object_call = $this->phpcsFile->findNext( T_OBJECT_OPERATOR, ( $stackPtr + 1 ), null, false, null, true );
+		$is_object_call = $this->phpcsFile->findNext( \T_OBJECT_OPERATOR, ( $stackPtr + 1 ), null, false, null, true );
 		if ( false === $is_object_call ) {
 			return; // This is not a call to the wpdb object.
 		}
 
-		$methodPtr = $this->phpcsFile->findNext( array( T_WHITESPACE ), ( $is_object_call + 1 ), null, true, null, true );
+		$methodPtr = $this->phpcsFile->findNext( array( \T_WHITESPACE ), ( $is_object_call + 1 ), null, true, null, true );
 		$method    = $this->tokens[ $methodPtr ]['content'];
 
 		$this->mergeFunctionLists();
@@ -134,7 +132,7 @@ class DirectDatabaseQuerySniff extends Sniff {
 			return;
 		}
 
-		$endOfStatement   = $this->phpcsFile->findNext( T_SEMICOLON, ( $stackPtr + 1 ), null, false, null, true );
+		$endOfStatement   = $this->phpcsFile->findNext( \T_SEMICOLON, ( $stackPtr + 1 ), null, false, null, true );
 		$endOfLineComment = '';
 		for ( $i = ( $endOfStatement + 1 ); $i < $this->phpcsFile->numTokens; $i++ ) {
 
@@ -142,7 +140,7 @@ class DirectDatabaseQuerySniff extends Sniff {
 				break;
 			}
 
-			if ( T_COMMENT === $this->tokens[ $i ]['code'] ) {
+			if ( \T_COMMENT === $this->tokens[ $i ]['code'] ) {
 				$endOfLineComment .= $this->tokens[ $i ]['content'];
 			}
 		}
@@ -180,10 +178,10 @@ class DirectDatabaseQuerySniff extends Sniff {
 			$whitelisted_cache = true;
 		}
 		if ( ! $whitelisted_cache && ! empty( $this->tokens[ $stackPtr ]['conditions'] ) ) {
-			$scope_function = $this->phpcsFile->getCondition( $stackPtr, T_FUNCTION );
+			$scope_function = $this->phpcsFile->getCondition( $stackPtr, \T_FUNCTION );
 
 			if ( false === $scope_function ) {
-				$scope_function = $this->phpcsFile->getCondition( $stackPtr, T_CLOSURE );
+				$scope_function = $this->phpcsFile->getCondition( $stackPtr, \T_CLOSURE );
 			}
 
 			if ( false !== $scope_function ) {
@@ -191,11 +189,11 @@ class DirectDatabaseQuerySniff extends Sniff {
 				$scopeEnd   = $this->tokens[ $scope_function ]['scope_closer'];
 
 				for ( $i = ( $scopeStart + 1 ); $i < $scopeEnd; $i++ ) {
-					if ( T_STRING === $this->tokens[ $i ]['code'] ) {
+					if ( \T_STRING === $this->tokens[ $i ]['code'] ) {
 
 						if ( isset( $this->cacheDeleteFunctions[ $this->tokens[ $i ]['content'] ] ) ) {
 
-							if ( in_array( $method, array( 'query', 'update', 'replace', 'delete' ), true ) ) {
+							if ( \in_array( $method, array( 'query', 'update', 'replace', 'delete' ), true ) ) {
 								$cached = true;
 								break;
 							}
@@ -221,8 +219,7 @@ class DirectDatabaseQuerySniff extends Sniff {
 		}
 
 		return $endOfStatement;
-
-	} // End process_token().
+	}
 
 	/**
 	 * Merge custom functions provided via a custom ruleset with the defaults, if we haven't already.
@@ -264,4 +261,4 @@ class DirectDatabaseQuerySniff extends Sniff {
 		}
 	}
 
-} // End class.
+}
