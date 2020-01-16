@@ -1325,7 +1325,7 @@ abstract class Sniff implements PHPCS_Sniff {
 
 		// Does the class/trait extend one of the whitelisted test classes ?
 		$extendedClassName = $this->phpcsFile->findExtendedClassName( $stackPtr );
-		if ( '\\' === $extendedClassName[0] ) {
+		if ( is_string( $extendedClassName[0] ) && '\\' === $extendedClassName[0] ) {
 			if ( isset( $whitelist[ substr( $extendedClassName, 1 ) ] ) ) {
 				return true;
 			}
