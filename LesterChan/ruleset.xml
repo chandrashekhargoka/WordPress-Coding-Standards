@@ -2,9 +2,10 @@
 <ruleset name="LesterChan">
 	<description>Lester Chan's WordPress Coding Standards</description>
 	<rule ref="WordPress-Core">
-		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
-		<exclude name="Squiz.PHP.CommentedOutCode.Found"/>
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments"/>
+		<exclude name="Squiz.PHP.CommentedOutCode.Found"/>
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
 	</rule>
 	<rule ref="WordPress-Docs"/>
 	<rule ref="WordPress-Extra"/>
